@@ -1,0 +1,14 @@
+{
+  "name": "live-ball-socketio",
+  "description": "",
+  "main": "",
+  "authors": [
+    "Ebubekir Doğan <ebubekiryusuf44@hotmail.com>"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/Ebu44/Live-Ball-SocketIO",
+  "dependencies": {
+    "angular": "^1.8.2",
+    "semantic": "^2.4.1"
+  }
+}
