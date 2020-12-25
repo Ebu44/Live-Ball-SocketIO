@@ -15,6 +15,18 @@ app.controller("indexController", [
       }
     };
 
+    function showBubble(id, message) {
+      $("#" + id)
+        .find(".message")
+        .show()
+        .html(message);
+      setTimeout(() => {
+        $("#" + id)
+          .find(".message")
+          .hide();
+      }, 2000);
+    }
+
     function initSocket(username) {
       const connectionOptions = {
         reconnectionAttempts: 3,
@@ -41,6 +53,10 @@ app.controller("indexController", [
             };
             $scope.messages.push(messageData);
             $scope.players[data.id] = data;
+            setTimeout(() => {
+              const element = document.getElementById("chat-area");
+              element.scrollTop = element.scrollHeight;
+            });
             $scope.$apply();
           });
           socket.on("disUser", (data) => {
@@ -53,6 +69,10 @@ app.controller("indexController", [
             };
             $scope.messages.push(messageData);
             delete $scope.players[data.id];
+            setTimeout(() => {
+              const element = document.getElementById("chat-area");
+              element.scrollTop = element.scrollHeight;
+            });
             $scope.$apply();
           });
           socket.on("animate", (data) => {
@@ -66,6 +86,17 @@ app.controller("indexController", [
               }
             );
           });
+
+          socket.on("newMessage", (data) => {
+            $scope.messages.push(data);
+            $scope.$apply();
+            showBubble(message.socketId, message.text);
+            setTimeout(() => {
+              const element = document.getElementById("chat-area");
+              element.scrollTop = element.scrollHeight;
+            });
+          });
+
           let animate = false;
           $scope.onClickPlayer = ($event) => {
             if (!animate) {
@@ -98,6 +129,9 @@ app.controller("indexController", [
             $scope.messages.push(messageData);
             $scope.message = "";
 
+            socket.emit("newMessage", messageData);
+
+            showBubble(socket.id, message);
             setTimeout(() => {
               const element = document.getElementById("chat-area");
               element.scrollTop = element.scrollHeight;
